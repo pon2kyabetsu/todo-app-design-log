@@ -37,11 +37,6 @@ loadTodos();
 searchInput.value = searchQuery;
 sortSelect.value = sortMode;
 
-filterBtns.forEach(b => b.classList.remove("active"));
-document.querySelector(`[data-filter="${currentFilter}"]`)?.classList.add("active");
-
-render();
-
 //追加
 function addTodo() {
   // TODO
@@ -67,15 +62,16 @@ todoInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") addTodo();
 });
 
-
-//フィルタ
-filterBtns.forEach((btn) => {
+//フィルタボタンによってURLのハッシュ部分を変更
+filterBtns.forEach(btn => {
   btn.addEventListener("click", () => {
-    currentFilter = btn.dataset.filter;
-    filterBtns.forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
+    const next = btn.dataset.filter;
+    if (next === currentFilter) {
+      return;
+    }
+    currentFilter = next;
     savePrefs();
-    render();
+    location.hash = `#${next}`;
   });
 });
 
@@ -219,6 +215,7 @@ todoList.addEventListener("focusout", (e) => {
 
 if (resetPrefsBtn) {
   resetPrefsBtn.addEventListener("click", () => {
+    location.hash = "#all";
     resetPrefs();
     savePrefs();
 
@@ -241,6 +238,7 @@ if (resetAllBtn) {
     if (!confirm("全データを削除します。よろしいですか？")) {
       return;
     }
+    location.hash = "#all";
     resetAll();
     saveTodos();
     savePrefs();
@@ -291,4 +289,28 @@ if (importBtn && jsonArea) {
       }
   });
 }
+
+//Hashに同期させてURLなどを変更させる
+function syncFromHash() {
+  const raw = location.hash;
+  if (raw) {
+    const h = raw.slice(1);
+    if (["all", "active", "done"].includes(h)) {
+      currentFilter = h;
+    }
+  }
+  //UIに反映させる
+  filterBtns.forEach(b => b.classList.remove("active"));
+  document.querySelector(`[data-filter="${currentFilter}"]`)?.classList.add("active");
+
+  render();
+
+  if(!location.hash) {
+    location.hash = `#${currentFilter}`;
+  }
+}
+
+//戻る/進む/URL直打ちに対応させる
+window.addEventListener("hashchange", syncFromHash);
+syncFromHash();
 

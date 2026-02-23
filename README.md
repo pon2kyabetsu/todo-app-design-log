@@ -4,7 +4,7 @@ Vanilla JS（HTML/CSS/JavaScript）で作ったToDoアプリを題材に、**設
 「動くもの」だけでなく、**なぜその構造にしたか**を説明できる状態を目指します。
 
 ## Demo
-- GitHub Pages: TODO（有効化したらURLを貼る）
+- GitHub Pages: https://pon2kyabetsu.github.io/todo-app-design-log/
 
 ## Features
 - ToDo追加 / 完了切替 / 削除

@@ -1,6 +1,6 @@
 # todo-app-design-log
 
-Vanilla JS（HTML/CSS/JavaScript）で作ったToDoアプリを題材に、**設計・責任分離・運用(Issue/PR)** の思考をログとして残すリポジトリです。  
+Vanilla JS（HTML/CSS/JavaScript）で作ったToDoアプリを題材に、**設計・責任分離・運用(Issue/PR)** の思考をログとして残すリポジトリです。
 「動くもの」だけでなく、**なぜその構造にしたか**を説明できる状態を目指します。
 
 ## Demo

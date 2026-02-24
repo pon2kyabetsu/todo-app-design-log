@@ -284,7 +284,7 @@ if (importBtn && jsonArea) {
 
 //Hashに同期させてURLなどを変更させる
 function syncFromHash() {
-  const raw = location.hash
+  const raw = location.hash;
 
   if (raw) {
     const h = raw.slice(1);

@@ -29,13 +29,23 @@ function debounce(func, delay) {
 // savePrefs を遅延実行する関数を作る
 const debouncedSavePrefs = debounce(savePrefs, 300);
 
+//UI反映をまとめた関数を作る
+function applyStateToUI() {
+  //UIに反映する
+  if (searchInput) {
+    searchInput.value = searchQuery;
+  }
+  if (sortSelect) {
+    sortSelect.value = sortMode;
+  }
+  filterBtns.forEach(b => {
+    b.classList.toggle("active",b.dataset.filter === currentFilter)});
+}
+
 //起動
 loadPrefs();
 loadTodos();
 
-//UIに反映する
-searchInput.value = searchQuery;
-sortSelect.value = sortMode;
 
 //追加
 function addTodo() {
@@ -218,17 +228,7 @@ if (resetPrefsBtn) {
     location.hash = "#all";
     resetPrefs();
     savePrefs();
-
-    //UIに反映
-    if (searchInput) {
-      searchInput.value = searchQuery;
-    }
-    if (sortSelect) {
-      sortSelect.value = sortMode;
-    }
-
-    document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
-    document.querySelector('[data-filter="all"]')?.classList.add("active");
+    applyStateToUI();
     render();
   });
 }
@@ -245,15 +245,7 @@ if (resetAllBtn) {
     if (jsonArea) {
       jsonArea.value = "";
     }
-    if (searchInput) {
-      searchInput.value = "";
-    }
-    if (sortSelect) {
-      sortSelect.value = "new";
-    }
-
-    document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
-    document.querySelector('[data-filter="all"]')?.classList.add("active");
+    applyStateToUI();
     render();
   });
 }
@@ -292,22 +284,17 @@ if (importBtn && jsonArea) {
 
 //Hashに同期させてURLなどを変更させる
 function syncFromHash() {
-  const raw = location.hash;
+  const raw = location.hash
+
   if (raw) {
     const h = raw.slice(1);
     if (["all", "active", "done"].includes(h)) {
-      currentFilter = h;
+        currentFilter = h;
     }
   }
   //UIに反映させる
-  filterBtns.forEach(b => b.classList.remove("active"));
-  document.querySelector(`[data-filter="${currentFilter}"]`)?.classList.add("active");
-
+  applyStateToUI();
   render();
-
-  if(!location.hash) {
-    location.hash = `#${currentFilter}`;
-  }
 }
 
 //戻る/進む/URL直打ちに対応させる
